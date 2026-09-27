@@ -124,10 +124,16 @@
     const getInitialApiBase = () => {
       const saved = localStorage.getItem("nh16_api_base");
       if (saved) return saved;
-      if (window.location.origin && window.location.origin.startsWith("http")) {
-        return window.location.origin;
+      if (typeof window !== "undefined" && window.location) {
+        const host = window.location.hostname;
+        if (host === "127.0.0.1" || host === "localhost") {
+          return window.location.port === "8000" ? window.location.origin : "http://127.0.0.1:8000";
+        }
+        if (host.includes("onrender.com")) {
+          return window.location.origin;
+        }
       }
-      return "http://127.0.0.1:8000";
+      return "https://traffic-incident-detection-system.onrender.com";
     };
 
     let API_BASE = getInitialApiBase();

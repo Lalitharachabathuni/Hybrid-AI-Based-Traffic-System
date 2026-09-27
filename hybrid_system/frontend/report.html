@@ -255,9 +255,21 @@
 <footer id="t-footer">Hybrid AI-Based Traffic Incident Detection &amp; Emergency Response System — India</footer>
 
 <script>
-const API_BASE = localStorage.getItem("nh16_api_base") || ((window.location.origin && window.location.origin.startsWith("http"))
-  ? window.location.origin
-  : "http://127.0.0.1:8000");
+const getInitialApiBase = () => {
+  const saved = localStorage.getItem("nh16_api_base");
+  if (saved) return saved;
+  if (typeof window !== "undefined" && window.location) {
+    const host = window.location.hostname;
+    if (host === "127.0.0.1" || host === "localhost") {
+      return window.location.port === "8000" ? window.location.origin : "http://127.0.0.1:8000";
+    }
+    if (host.includes("onrender.com")) {
+      return window.location.origin;
+    }
+  }
+  return "https://traffic-incident-detection-system.onrender.com";
+};
+const API_BASE = getInitialApiBase();
 
 const TXT = {
   en: {
